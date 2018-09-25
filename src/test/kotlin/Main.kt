@@ -1,6 +1,7 @@
 import io.kotlintest.Description
 import io.kotlintest.TestResult
 import io.kotlintest.extensions.TestListener
+import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import net.tomp2p.dht.PeerBuilderDHT
 import net.tomp2p.dht.PeerDHT
@@ -14,7 +15,7 @@ object PeersListener : TestListener {
     lateinit var peer2: PeerDHT
 
     val KEY = Number160.ONE!!
-    val VALUE = "hallo"
+    const val VALUE = "hallo"
 
     override fun beforeTest(description: Description) {
         peer1 = PeerBuilderDHT(PeerBuilder(Number160.createHash("test1")).ports(4000).start()).start()
@@ -37,7 +38,8 @@ class MainTest : StringSpec() {
 
     init {
         "Added key should be available in DHT" {
-            listeners()[0].peer2.get(Number160.ONE).start().awaitUninterruptibly().data().`object`()
+            val listener = listeners()[0]
+            listener.peer2.get(listener.KEY).start().awaitUninterruptibly().data().`object`().shouldBe(listener.VALUE)
         }
     }
 }
