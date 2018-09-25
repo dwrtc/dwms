@@ -28,8 +28,6 @@ object PeersListener : TestListener {
         peer1.shutdown()
         peer2.shutdown()
     }
-
-
 }
 
 class MainTest : StringSpec() {
