@@ -6,21 +6,22 @@ import net.tomp2p.peers.Number160
 import net.tomp2p.peers.PeerAddress
 import java.util.*
 
-class ClientDiscoveryService() {
+class ClientService() {
     private val peerId = UUID.randomUUID().toString()
     private val peer = PeerBuilderDHT(PeerBuilder(Number160.createHash(peerId)).ports(4000).start()).start()!!
 
     constructor(bootstrapPeerAddress: PeerConnectionDetails) : this() {
         peer.peer().bootstrap().inetAddress(bootstrapPeerAddress.ipAddress).ports(bootstrapPeerAddress.port).start()
-            .awaitListeners()
+                .awaitListeners()
     }
 
-    fun registerClient(sessionId: String) {
+    fun addClient(sessionId: String): InternalClient {
         peer.put(Number160.createHash(sessionId)).`object`(peer.peerAddress()).start().awaitUninterruptibly()
+        return InternalClient(peer, sessionId)
     }
 
-    fun deregisterClient(sessionId: String) {
-        peer.remove(Number160.createHash(sessionId)).all().start().awaitUninterruptibly()
+    fun removeClient(internalClient: InternalClient) {
+        peer.remove(Number160.createHash(internalClient.sessionId)).all().start().awaitUninterruptibly()
     }
 
     fun findClient(sessionId: String): ExternalClient {
