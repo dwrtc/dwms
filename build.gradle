@@ -6,6 +6,16 @@ plugins {
     id("org.sonarqube") version "2.6"
 }
 
+ext {
+    tomP2PVersion = "5.0-Beta8"
+    javalinVersion = "2.2.+"
+    jacksonVersion = "2.9.+"
+    slf4JVersion = "1.7.+"
+    kotlinLoggingVersion = "1.6.+"
+    kotlinTestVersion = "3.1.+"
+
+}
+
 repositories {
     mavenLocal()
     jcenter()
@@ -20,15 +30,15 @@ dependencies {
     //noinspection DifferentStdlibGradleVersion
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    compile("net.tomp2p:tomp2p-all:5.0-Beta8")
-    compile("io.javalin:javalin:2.2.0")
-    compile("org.slf4j:slf4j-simple:1.7.25")
+    compile("net.tomp2p:tomp2p-all:${tomP2PVersion}")
+    compile("io.javalin:javalin:${javalinVersion}")
+    compile("org.slf4j:slf4j-simple:${slf4JVersion}")
 
-    compile("io.github.microutils:kotlin-logging:1.6.10")
+    compile("io.github.microutils:kotlin-logging:${kotlinLoggingVersion}")
 
-    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+")
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
 
-    testCompile("io.kotlintest:kotlintest-runner-junit5:3.1.8")
+    testCompile("io.kotlintest:kotlintest-runner-junit5:${kotlinTestVersion}")
 }
 test {
     useJUnitPlatform {}
