@@ -1,10 +1,14 @@
 package ch.hsr.dsl.dwrtc.signaling
 
-import kotlin.properties.ObservableProperty
+import net.tomp2p.dht.PeerDHT
+import net.tomp2p.peers.PeerAddress
 
-abstract class Client {
-    internal abstract fun sendMessage(message: Message)
+class Client(private val peer: PeerDHT, val sessionId: String, val peerAddress: PeerAddress) {
+    fun sendMessage(messageBody: String, recipient: Client) {
+        peer.peer().sendDirect(recipient.peerAddress).`object`(MessageDto(sessionId, messageBody)).start()
+    }
 
-    abstract val receiveMessage: ObservableProperty<Message>
-    abstract fun createMessage(messageBody: String): Message
+    fun onReceiveMessage(emitter: (MessageDto) -> Any) {
+        peer.peer().objectDataReply { sender, request -> if (request is MessageDto) emitter(request) }
+    }
 }
