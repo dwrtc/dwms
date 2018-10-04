@@ -11,7 +11,7 @@ class ClientDiscoveryService() {
     private val peer = PeerBuilderDHT(PeerBuilder(Number160.createHash(peerId)).ports(4000).start()).start()!!
 
     constructor(bootstrapPeerAddress: PeerConnectionDetails) : this() {
-        peer.peer().bootstrap().inetAddress(bootstrapPeerAddress.ip_address).ports(bootstrapPeerAddress.port).start()
+        peer.peer().bootstrap().inetAddress(bootstrapPeerAddress.ipAddress).ports(bootstrapPeerAddress.port).start()
             .awaitListeners()
     }
 
@@ -23,11 +23,11 @@ class ClientDiscoveryService() {
         peer.remove(Number160.createHash(sessionId)).all().start().awaitUninterruptibly()
     }
 
-    fun findClient(sessionId: String): Client {
+    fun findClient(sessionId: String): ExternalClient {
         val peerIdGet = peer.get(Number160.createHash(sessionId)).start().awaitUninterruptibly()
         return if (peerIdGet.isSuccess) {
             val peerAddress = peerIdGet.data().`object`() as PeerAddress
-            Client(peer, sessionId, peerAddress)
+            ExternalClient(sessionId, peerAddress)
         } else throw Exception("No peer found under session ID $sessionId")
     }
 }
