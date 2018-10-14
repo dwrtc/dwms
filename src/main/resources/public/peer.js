@@ -1,23 +1,26 @@
 "use strict"
 
 const wsProtocol = location.protocol === "https" ? "wss" : "ws" // in a perfect world, it's always wss
-const WEBSOCKET_URL = `${wsProtocol}://${location.host}/ws`
+const websocketUrl = `${wsProtocol}://${location.host}/ws`
 
-const connectNormalButton = document.getElementById("connectNormal")
-const initialOtherPeerIdInput = document.getElementById("otherPeerId")
-const connectToSessionButton = document.getElementById("connectToSession")
-const connectToSessionForm = document.getElementById("connectToSessionForm")
-
-const input = document.getElementById("input")
-const output = document.getElementById("output")
-const idMessage = document.getElementById("idMessage")
-const idValue = document.getElementById("idValue")
-const idCopy = document.getElementById("idCopy")
-const yourVideo = document.getElementById("yourVideo")
-const otherVideo = document.getElementById("otherVideo")
-
-const errorOverlay = document.getElementById("errorOverlay")
-const errorMessage = document.getElementById("errorMessage")
+const elements = []
+// TODO why does this need to be a named constant? "inline" doesn't seem to work
+const elementIds = [
+  "connectNormal",
+  "otherPeerId",
+  "connectToSession",
+  "connectToSessionForm",
+  "input",
+  "output",
+  "idMessage",
+  "idValue",
+  "idCopy",
+  "yourVideo",
+  "otherVideo",
+  "errorOverlay",
+  "errorMessage"
+]
+elementIds.forEach(e => (elements[e] = document.getElementById(e)))
 
 class SignalingMessage {
   constructor(recipientSessionId, messageBody) {
@@ -30,56 +33,53 @@ class SignalingMessage {
  * Onload. Setup the page interactions
  */
 window.onload = () => {
-  connectNormalButton.onclick = event => {
+  elements["connectNormal"].onclick = event => {
     event.preventDefault()
     startDwrtc(false)
   }
-  connectToSessionButton.onclick = event => {
-    if (connectToSessionForm.checkValidity()) {
+  elements["connectToSession"].onclick = event => {
+    if (elements["connectToSessionForm"].checkValidity()) {
       // Allow HTML5 form validation to take place
       event.preventDefault()
-      startDwrtc(true, initialOtherPeerIdInput.value)
+      startDwrtc(true, elements["otherPeerId"].value)
       hideIdMessage()
     }
   }
-  idCopy.onclick = event => {
-    event.preventDefault()
-    idValue.select()
-    document.execCommand("copy")
-    idCopy.textContent = "Copied!"
-  }
+  elements["idCopy"].onclick = copyIdToClipboard
   enableInput()
 }
 
 const showOutput = () => {
-  output.hidden = false
+  elements["output"].hidden = false
   // if the css is "display: grid" initially, this overrides the hidden attribute
   // therefore, we have to unhide it and add the proper class
-  output.classList.add("grid")
+  elements["output"].classList.add("grid")
 }
 
 const hideIdMessage = () => {
-  idMessage.hidden = true
+  elements["idMessage"].hidden = true
 }
 
 const showOtherVideo = () => {
-  otherVideo.hidden = false
+  elements["otherVideo"].hidden = false
   hideIdMessage()
 }
 
-const copyIdToClipboard = () => {
-  idValue.select()
+const copyIdToClipboard = event => {
+  event.preventDefault()
+  elements["idValue"].select()
   document.execCommand("copy")
+  elements["idCopy"].textContent = "Copied!"
 }
 
-const enableInput = () => (input.hidden = false)
+const enableInput = () => (elements["input"].hidden = false)
 
-const disableInput = () => (input.hidden = true)
+const disableInput = () => (elements["input"].hidden = true)
 
 const showError = error => {
-  errorOverlay.hidden = false
-  errorOverlay.classList.add("fade-in")
-  errorMessage.textContent = error
+  elements["errorOverlay"].hidden = false
+  elements["errorOverlay"].classList.add("fade-in")
+  elements["errorMessage"].textContent = error
 }
 
 /**
@@ -123,9 +123,9 @@ class DWRTC {
         video: true,
         audio: true
       })
-      yourVideo.srcObject = stream
-      yourVideo.play()
-      yourVideo.muted = true
+      elements["yourVideo"].srcObject = stream
+      elements["yourVideo"].play()
+      elements["yourVideo"].muted = true
       this.peer = new window.SimplePeer({
         initiator: this.isInitiator,
         stream: stream
@@ -141,14 +141,9 @@ class DWRTC {
 
   /** Initialize the websocket completely */
   async setupSocket() {
-    this.socket = new WebSocket(WEBSOCKET_URL)
+    this.socket = new WebSocket(websocketUrl)
 
-    // Dummy promise that we can resolve when the websocket is open
-    await new Promise(
-      function(resolve, reject) {
-        this.socket.onopen = _ => resolve()
-      }.bind(this)
-    )
+    await this.websocketIsReady()
     this.socket.onclose = event => {
       const message = `Websocket closed (Reason ${event.reason}, Code ${
         event.code
@@ -167,6 +162,14 @@ class DWRTC {
     console.debug("Websocket set up")
   }
 
+  async websocketIsReady() {
+    await new Promise(
+      function(resolve, reject) {
+        this.socket.onopen = _ => resolve()
+      }.bind(this)
+    )
+  }
+
   /**
    * Make the Simple Peer configuration complete
    * This needs to run in a separate step than setupSimplePeer(), since we first need to set up the socket
@@ -181,11 +184,11 @@ class DWRTC {
       )
       this.socket.send(JSON.stringify(message))
     })
-    this.peer.on("stream", function(stream) {
+    this.peer.on("stream", stream => {
       console.log("Got video stream!")
       showOtherVideo()
-      otherVideo.srcObject = stream
-      otherVideo.play()
+      elements["otherVideo"].srcObject = stream
+      elements["otherVideo"].play()
     })
   }
 
@@ -222,7 +225,7 @@ class DWRTC {
   handleWebsocketIdMessage(message) {
     const id = message.id
     console.debug(`ID: ${id}`)
-    idValue.value = id
+    elements["idValue"].value = id
   }
 
   /**
