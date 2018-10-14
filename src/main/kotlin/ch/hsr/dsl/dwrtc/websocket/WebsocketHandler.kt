@@ -65,6 +65,7 @@ class WebsocketHandler(app: Javalin, private val signallingService: ClientServic
     }
 
     private fun onReceiveMessageFromSignaling(sender: ExternalClient, message: SignalingMessage) {
+        logger.info { "sending message ${message}" }
         sessions[message.recipientSessionId]?.let { it.send(toJson(message)) }
     }
 
