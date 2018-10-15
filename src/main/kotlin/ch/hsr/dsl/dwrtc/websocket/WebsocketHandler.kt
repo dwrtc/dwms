@@ -9,6 +9,7 @@ import mu.KLogging
 import java.util.concurrent.ConcurrentHashMap
 
 const val IDLE_TIMEOUT_MS: Long = 15 * 60 * 1000
+const val WEBSOCKET_PATH = "/ws"
 
 class WebsocketHandler(app: Javalin, private val signallingService: ClientService) {
     companion object : KLogging()
@@ -17,7 +18,7 @@ class WebsocketHandler(app: Javalin, private val signallingService: ClientServic
     private val sessions = ConcurrentHashMap<String, WsSession>()
 
     init {
-        app.ws("/ws") { ws ->
+        app.ws(WEBSOCKET_PATH) { ws ->
             ws.onConnect { session -> connect(session) }
             ws.onMessage { session, message -> onReceiveMessageFromWebsocket(session, message) }
             ws.onClose { session, statusCode, reason -> close(session, reason) }
