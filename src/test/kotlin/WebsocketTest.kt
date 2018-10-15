@@ -30,7 +30,7 @@ class WebsocketTest : WordSpec(), TestListener {
         JavalinJackson.fromJson(jsonString, OutputType::class.java)
 
     init {
-        "A websocket handler" should {
+        "the initial message" should {
             WebsocketHandler(app, service)
             "be accessible under the specified port" {
                 val client = WebsocketClient.blocking(wsUri)
@@ -50,6 +50,13 @@ class WebsocketTest : WordSpec(), TestListener {
                 val firstMessageString = client.received().take(1).toList().first().bodyString()
                 val firstMessage = jsonTo<WebsocketIdMessage>(firstMessageString)
                 firstMessage.id.length.shouldBe(36)
+            }
+
+            "have the correct type" {
+                val client = WebsocketClient.blocking(wsUri)
+                val firstMessageString = client.received().take(1).toList().first().bodyString()
+                val firstMessage = jsonTo<WebsocketIdMessage>(firstMessageString)
+                firstMessage.type.shouldBe("WebsocketIdMessage")
             }
         }
     }
