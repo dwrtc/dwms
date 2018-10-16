@@ -2,8 +2,9 @@ package ch.hsr.dsl.dwrtc.websocket
 
 import ch.hsr.dsl.dwrtc.signaling.*
 import ch.hsr.dsl.dwrtc.signaling.exceptions.SignalingException
+import ch.hsr.dsl.dwrtc.util.jsonTo
+import ch.hsr.dsl.dwrtc.util.toJson
 import io.javalin.Javalin
-import io.javalin.json.JavalinJackson
 import io.javalin.websocket.WsSession
 import mu.KLogging
 import java.util.concurrent.ConcurrentHashMap
@@ -68,9 +69,4 @@ class WebsocketHandler(app: Javalin, private val signallingService: ClientServic
     private fun onReceiveMessageFromSignaling(sender: ExternalClient, message: SignalingMessage) {
         sessions[message.recipientSessionId]?.let { it.send(toJson(message)) }
     }
-
-    private inline fun <reified OutputType> jsonTo(jsonString: String) =
-            JavalinJackson.fromJson(jsonString, OutputType::class.java)
-
-    private fun toJson(message: Any) = JavalinJackson.toJson(message)
 }
