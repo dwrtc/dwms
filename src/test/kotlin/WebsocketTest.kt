@@ -20,11 +20,11 @@ class WebsocketTest : WordSpec(), TestListener {
 
     override fun testCaseOrder() = TestCaseOrder.Random // make sure tests are not dependent on each other
 
-    val port = findFreePort()
-    val app = Javalin.create().start(port)
-    val service = ClientService()
-    val wsUri = Uri.of("ws://localhost:$port$WEBSOCKET_PATH")
-    
+    private val port = findFreePort()
+    private val app = Javalin.create().start(port)!!
+    private val service = ClientService()
+    private val wsUri = Uri.of("ws://localhost:$port$WEBSOCKET_PATH")
+
     init {
         "the initial message" should {
             WebsocketHandler(app, service)
