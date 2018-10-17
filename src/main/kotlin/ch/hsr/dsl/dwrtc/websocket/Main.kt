@@ -16,10 +16,7 @@ fun main(args: Array<String>) {
             .start(config[WEBSERVER_PORT])
 
     val clientService = if (config.contains(BOOTSTRAP_IP) && config.contains(BOOTSTRAP_PORT)) {
-        val bootstrapIp = config[BOOTSTRAP_IP]
-        val bootstrapPort = config[BOOTSTRAP_PORT]
-        val peerConnectionDetails = PeerConnectionDetails(bootstrapIp, bootstrapPort)
-        ClientService(peerConnectionDetails)
+        ClientService(PeerConnectionDetails(config[BOOTSTRAP_IP], config[BOOTSTRAP_PORT]))
     } else {
         ClientService()
     }
