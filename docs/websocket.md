@@ -20,3 +20,29 @@ The [WebSocketHandler] is relatively small. It just consists of four components:
 The rest of the class are just some handlers that register the specific WebSocket callbacks to those methods.
 
 ## API Doc
+
+This API is quite simple.
+
+When connected to the WebSocket you can send or receive the following message types:
+
+### Send
+
+* `SignalingMessage`. Send your black box signaling message to another peer.
+  * `recipientSessionId: String`. The recipient's session ID. Used for routing.
+  * `messageBody: String`. The free-form message body. To the transport layer, this is a black box.
+  
+### Receive
+
+You must handle all these incoming message types. They are distinguishable by their `type` field.
+``
+* `WebSocketIdMessage`. Tells you your session ID.
+  * `type: String`. Static value `WebSocketIdMessage`
+  * `id: String`. Your session ID
+* `WebSocketErrorMessage`. Tells you that something went wrong
+  * `type: String`. Static value `WebSocketErrorMessage`
+  * `error: String`. The error message
+* `SignalingMessage`. Incoming, signaling messages
+  * `type: String`. Static value `SignalingMessage`
+  * `senderSessionId: String`. The sender' session ID. Can be used to reply to messages
+  * `recipientSessionId: String`. The recipient's session ID. This should be your session ID!
+  * `messageBody: String`. The free-form message body
