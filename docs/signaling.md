@@ -10,9 +10,7 @@ To connect to other clients, [find clients][ClientService.findClient]. This will
 
 ## Design decisions
 
-### Anti-cheating mechanisms
-
-As this system in a P2P network, it is possible to add bad data. However, the API makes this harder:
+### User Input 
 
 * [SignalingMessage.recipientSessionId] and [SignalingMessage.senderSessionId] IDs are overwritten before they go to the TomP2P layer.
 * [ClientService.removeClient] only accepts an [IInternalClient] (that was received from [ClientService.addClient]), so one cannot easily disconnect another user.

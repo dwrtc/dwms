@@ -6,7 +6,7 @@ UI layer. Handles sending and receiving messages from the WebSocket connections.
 
 ### Message format
 
-To keep things simple, the [Message] format is re-used.
+The [Message] format is re-used.
 
 ### Few Components
 

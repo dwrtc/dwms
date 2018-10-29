@@ -16,9 +16,9 @@ Note, that all these classes employ TomP2P semantics. Think of these as a very t
 * [net.tomp2p.futures.BaseFuture.onFailure]
 * [net.tomp2p.futures.BaseFuture.onSuccess]
 
-`FutureGet` extension classes: these work on all Get operations that TomP2P returns. Also includes all `BaseFuture` extensions.
+`FutureGet` extension classes work on all Get operations that TomP2P returns. Also includes all `BaseFuture` extensions.
 
-These fire on `BaseFuture`'s `onComplete`! Therefore, the success status still needs to be checked.
+These fire on `BaseFuture`'s `onComplete`. Therefore, the success status still needs to be checked.
 
 These methods differ by these orthogonal concepts:
 
