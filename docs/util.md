@@ -8,7 +8,7 @@ To easier work with TomP2P's Futures in Kotlin, this projects includes a few ext
 
 They are documented in place, but need this bit of documentation to tie them all together
 
-Note, that all these classes employ TomP2P semantics. Think of these as a very thin layer upon TomP2P. E.g., a failure is only raised when no connection can be made. An empty response is no failure to TomP2P. To work more nicely with those responses, have a look at our higher-level [Future] classes. 
+Note, that all these classes employ TomP2P semantics. Think of these as a very thin layer upon TomP2P. E.g., a failure is only raised when no connection can be made. An empty response is no failure to TomP2P. To work more nicely with those responses, have a look at the higher-level [Future] classes. 
 
 `BaseFuture` extension classes: these work on all Futures that TomP2P returns
 
