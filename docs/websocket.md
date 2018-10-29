@@ -17,4 +17,6 @@ The [WebSocketHandler] is relatively small. It just consists of four components:
 * [WebSocketHandler.onReceiveMessageFromWebSocket] uses the session ID to get the [InternalClient]. This is then used to send a message to send a message through the P2P layer
 * [WebSocketHandler.onReceiveMessageFromSignaling] uses the session ID to get the WebSocket session. This is then used to send the message to the specific WebSocket
 
+The rest of the class are just some handlers that register the specific WebSocket callbacks to those methods.
+
 ## API Doc
