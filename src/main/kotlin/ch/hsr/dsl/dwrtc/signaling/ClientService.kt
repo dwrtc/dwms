@@ -124,7 +124,7 @@ class ClientService constructor(peerPort: Int? = findFreePort()) : IClientServic
 
         future.onFailure { logger.info { "find client with $sessionId failed completely" } }
         future.onNotFound { logger.info { "find client with $sessionId failed (not found)" } }
-        future.onGet { _, _ -> logger.info { "find client with $sessionId successful" } }
+        future.onGet { logger.info { "find client with $sessionId successful" } }
 
         return future
     }

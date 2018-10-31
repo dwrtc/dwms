@@ -37,7 +37,7 @@ class MessageClientServicesTest : WordSpec(), TestListener {
         "a client" should {
             "be able to send a message" {
                 var messageFuture: Future? = null
-                externalClientSecondFuture.onGet { externalClient, _ ->
+                externalClientSecondFuture.onGet { externalClient ->
                     messageFuture = clientFirst.sendMessage(
                         MESSAGE_BODY,
                         externalClient
@@ -50,7 +50,7 @@ class MessageClientServicesTest : WordSpec(), TestListener {
 
             "be able to receive a message" {
                 clientSecond.onReceiveMessage { _, messageDto -> message = messageDto.messageBody }
-                externalClientSecondFuture.onGet { externalClient, _ ->
+                externalClientSecondFuture.onGet { externalClient ->
                     clientFirst.sendMessage(MESSAGE_BODY, externalClient).await()
                 }
                 externalClientSecondFuture.await()

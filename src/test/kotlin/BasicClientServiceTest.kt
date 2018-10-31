@@ -29,14 +29,14 @@ class BasicClientServiceTest : WordSpec(), TestListener {
         clientServiceFirst.addClient(FIRST_CLIENT_ID).second.await()
         clientServiceSecond.addClient(SECOND_CLIENT_ID).second.await()
         val (thirdClient, clientFuture) = clientServiceFirst.addClient(THIRD_CLIENT_ID)
+        clientFuture.onComplete { clientServiceFirst.removeClient(thirdClient).await() }
         clientFuture.await()
-        clientServiceFirst.removeClient(thirdClient).await()
 
         "Two Client Services" should {
             "find clients on the same one" {
                 var sessionId = ""
                 val future = clientServiceFirst.findClient(FIRST_CLIENT_ID)
-                future.onGet { externalClient, _ -> sessionId = externalClient.sessionId }
+                future.onGet { externalClient -> sessionId = externalClient.sessionId }
                 future.await()
                 sessionId.shouldBe(FIRST_CLIENT_ID)
             }
@@ -45,10 +45,10 @@ class BasicClientServiceTest : WordSpec(), TestListener {
                 var secondSessionId = ""
 
                 val firstFuture = clientServiceFirst.findClient(SECOND_CLIENT_ID)
-                firstFuture.onGet { client, _ -> secondSessionId = client.sessionId }
+                firstFuture.onGet { client -> secondSessionId = client.sessionId }
 
                 val secondFuture = clientServiceSecond.findClient(FIRST_CLIENT_ID)
-                secondFuture.onGet { client, _ -> firstSessionId = client.sessionId }
+                secondFuture.onGet { client -> firstSessionId = client.sessionId }
 
                 firstFuture.await()
                 secondFuture.await()
