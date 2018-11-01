@@ -15,9 +15,10 @@ import net.tomp2p.futures.BaseFuture
  */
 open class Future(private val baseFuture: BaseFuture) {
     /** Await all registered listeners */
-    fun await() {
-        baseFuture.awaitListeners()
-    }
+    fun awaitListeners() = Future(baseFuture.awaitListeners())
+
+    /** Await async operation to end */
+    fun await() = Future(baseFuture.await())
 
     /** An operation has completed. Check [net.tomp2p.futures.BaseFuture.onComplete] for the full semantics
      *

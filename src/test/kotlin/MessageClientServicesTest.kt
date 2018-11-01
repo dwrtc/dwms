@@ -34,28 +34,28 @@ class MessageClientServicesTest : WordSpec(), TestListener {
         firstFuture.await()
         secondFuture.await()
 
-        val externalClientSecondFuture = clientServiceFirst.findClient(SECOND_CLIENT_ID)
-        var externalClient: IExternalClient? = null
-        externalClientSecondFuture.onGet { client -> externalClient = client }
-        externalClientSecondFuture.await()
-
         "a client" should {
+            val externalClientSecondFuture = clientServiceFirst.findClient(SECOND_CLIENT_ID)
+            var externalClient: IExternalClient? = null
+            externalClientSecondFuture.onGet { client -> externalClient = client }
+            externalClientSecondFuture.await().awaitListeners()
+
             "be able to send a message" {
+
                 var success = false
                 val messageFuture = clientFirst.sendMessage(
                     MESSAGE_BODY,
                     externalClient!!
                 )
                 messageFuture.onComplete { success = true }
-                messageFuture.await()
+                messageFuture.awaitListeners()
                 success.shouldBeTrue()
             }
 
             "be able to receive a message" {
                 var message = ""
                 clientSecond.onReceiveMessage { _, messageDto -> message = messageDto.messageBody }
-                clientFirst.sendMessage(MESSAGE_BODY, externalClient!!).await()
-                externalClientSecondFuture.await()
+                clientFirst.sendMessage(MESSAGE_BODY, externalClient!!).awaitListeners()
                 message.shouldBe(MESSAGE_BODY)
             }
         }
