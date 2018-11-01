@@ -1,4 +1,5 @@
 import ch.hsr.dsl.dwrtc.signaling.ClientService
+import ch.hsr.dsl.dwrtc.signaling.IExternalClient
 import io.kotlintest.Description
 import io.kotlintest.TestCaseOrder
 import io.kotlintest.TestResult
@@ -34,29 +35,26 @@ class MessageClientServicesTest : WordSpec(), TestListener {
         secondFuture.await()
 
         val externalClientSecondFuture = clientServiceFirst.findClient(SECOND_CLIENT_ID)
-
-        var message = ""
+        var externalClient: IExternalClient? = null
+        externalClientSecondFuture.onGet { client -> externalClient = client }
+        externalClientSecondFuture.await()
 
         "a client" should {
             "be able to send a message" {
                 var success = false
-                externalClientSecondFuture.onGet { externalClient ->
-                    val messageFuture = clientFirst.sendMessage(
-                        MESSAGE_BODY,
-                        externalClient
-                    )
-                    messageFuture.onComplete { success = true }
-                    messageFuture.await()
-                }
-                externalClientSecondFuture.await()
+                val messageFuture = clientFirst.sendMessage(
+                    MESSAGE_BODY,
+                    externalClient!!
+                )
+                messageFuture.onComplete { success = true }
+                messageFuture.await()
                 success.shouldBeTrue()
             }
 
             "be able to receive a message" {
+                var message = ""
                 clientSecond.onReceiveMessage { _, messageDto -> message = messageDto.messageBody }
-                externalClientSecondFuture.onGet { externalClient ->
-                    clientFirst.sendMessage(MESSAGE_BODY, externalClient).await()
-                }
+                clientFirst.sendMessage(MESSAGE_BODY, externalClient!!).await()
                 externalClientSecondFuture.await()
                 message.shouldBe(MESSAGE_BODY)
             }
