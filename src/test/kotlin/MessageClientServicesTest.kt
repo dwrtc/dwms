@@ -1,7 +1,10 @@
 import ch.hsr.dsl.dwrtc.signaling.ClientService
-import ch.hsr.dsl.dwrtc.signaling.Future
-import io.kotlintest.*
+import io.kotlintest.Description
+import io.kotlintest.TestCaseOrder
+import io.kotlintest.TestResult
 import io.kotlintest.extensions.TestListener
+import io.kotlintest.matchers.boolean.shouldBeTrue
+import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 
 class MessageClientServicesTest : WordSpec(), TestListener {
@@ -36,16 +39,17 @@ class MessageClientServicesTest : WordSpec(), TestListener {
 
         "a client" should {
             "be able to send a message" {
-                var messageFuture: Future? = null
+                var success = false
                 externalClientSecondFuture.onGet { externalClient ->
-                    messageFuture = clientFirst.sendMessage(
+                    val messageFuture = clientFirst.sendMessage(
                         MESSAGE_BODY,
                         externalClient
                     )
+                    messageFuture.onComplete { success = true }
+                    messageFuture.await()
                 }
                 externalClientSecondFuture.await()
-                messageFuture?.onFailure { fail("message failed") } ?: fail("messageFuture not set")
-                messageFuture?.await()
+                success.shouldBeTrue()
             }
 
             "be able to receive a message" {
