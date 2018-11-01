@@ -28,5 +28,17 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
         
-      # run tests!
-      - run: gradle test
+      - run: ./gradlew build -x test
+      - run: ./gradlew test
+      - run: >
+          ./gradlew sonarqube 
+          -Dsonar.projectKey=${SONAR_KEY} 
+          -Dsonar.organization=${SONAR_ORGANZATION} 
+          -Dsonar.host.url=${SONAR_HOST} 
+          -Dsonar.login=${SONAR_LOGIN_TOKEN} 
+          -Dsonar.pullrequest.provider=github 
+          -Dsonar.pullrequest.github.repository=${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} 
+          -Dsonar.pullrequest.github.endpoint=https://api.github.com/ 
+          -Dsonar.pullrequest.branch=${CIRCLE_BRANCH} 
+          -Dsonar.pullrequest.key=${CIRCLE_PR_NUMBER} 
+          -Dsonar.pullrequest.base=master 
