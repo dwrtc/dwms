@@ -1,6 +1,6 @@
 # DWRTC - Distributed WebRTC Signalling
 
-![Sonar Rating](https://sonarcloud.io/api/project_badges/measure?project=dwrtc&metric=sqale_rating)
+[![Sonar Rating](https://sonarcloud.io/api/project_badges/measure?project=dwrtc&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=dwrtc)
 [![CircleCI](https://circleci.com/gh/dwrtc/dwrtc.svg?style=svg)](https://circleci.com/gh/dwrtc/dwrtc)
 
 Project Page: https://dwrtc.net/
