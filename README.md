@@ -9,7 +9,7 @@ WebSocket API documentation: https://docs.dwrtc.net/dwrtc/ch.hsr.dsl.dwrtc.webso
 
 Full Kdoc documentation: https://docs.dwrtc.net/
 
-## Usage∆
+## Usage
 
 ```sh
 $ docker-compose up -d
@@ -21,14 +21,13 @@ dwrtc_node1_1   java -jar /app/app.jar   Up      0.0.0.0:PORT1->7000/tcp
 dwrtc_node2_1   java -jar /app/app.jar   Up      0.0.0.0:PORT2->7000/tcp
 ```
 
-Connect to `localhost:PORT1` for node1 and `localhost:PORT2` f∆or node2 via a web browser.
+Connect to `localhost:PORT1` for node1 and `localhost:PORT2` for node2 via a web browser.
 
 ## Introduction
 
 > Coming
 
 ## Code Samples
-
 
 > Coming
 
