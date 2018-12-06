@@ -1,6 +1,7 @@
 package test
 
 import ch.hsr.dsl.dwrtc.signaling.ClientService
+import ch.hsr.dsl.dwrtc.util.findFreePort
 import ch.hsr.dsl.dwrtc.util.jsonTo
 import ch.hsr.dsl.dwrtc.websocket.WEBSOCKET_PATH
 import ch.hsr.dsl.dwrtc.websocket.WebSocketHandler
@@ -24,7 +25,7 @@ class WebSocketTest : WordSpec(), TestListener {
     override val defaultTestCaseConfig = TestCaseConfig(invocations = 1, threads = 1, timeout = 5.seconds)
     override fun testCaseOrder() = TestCaseOrder.Random // make sure tests are not dependent on each other
 
-    private val port = 35571
+    private val port = findFreePort()
     private val app = Javalin.create().start(port)!!
     private val service = ClientService()
     private val wsUri = Uri.of("ws://localhost:$port$WEBSOCKET_PATH")
