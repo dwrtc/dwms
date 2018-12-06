@@ -24,7 +24,7 @@ import org.http4k.websocket.WsMessage
 class WebSocketStressTest : WordSpec(), TestListener {
     companion object : KLogging()
 
-    override val defaultTestCaseConfig = TestCaseConfig(invocations = 1, threads = 1, timeout = 5.seconds)
+    override val defaultTestCaseConfig = TestCaseConfig(threads = 1, timeout = 5.seconds)
     override fun testCaseOrder() = TestCaseOrder.Random // make sure tests are not dependent on each other
 
     private val port = findFreePort()

@@ -8,7 +8,7 @@ import net.tomp2p.peers.Number160
 import net.tomp2p.storage.Data
 
 class DhtTest : WordSpec(), TestListener {
-    override fun isInstancePerTest(): Boolean = true
+    override val defaultTestCaseConfig = TestCaseConfig(threads = 1, timeout = 5.seconds)
     override fun testCaseOrder() = TestCaseOrder.Random // make sure tests are not dependent on each other
 
     companion object {
