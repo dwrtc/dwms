@@ -10,10 +10,8 @@ import ch.hsr.dsl.dwrtc.websocket.WebSocketErrorMessage
 import ch.hsr.dsl.dwrtc.websocket.WebSocketHandler
 import ch.hsr.dsl.dwrtc.websocket.WebSocketIdMessage
 import io.javalin.Javalin
-import io.kotlintest.TestCaseOrder
+import io.kotlintest.*
 import io.kotlintest.extensions.TestListener
-import io.kotlintest.fail
-import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import mu.KLogging
 import org.http4k.client.WebsocketClient
@@ -23,6 +21,7 @@ import org.http4k.websocket.WsMessage
 class WebSocketCloseBehaviorTest : WordSpec(), TestListener {
     companion object : KLogging()
 
+    override val defaultTestCaseConfig = TestCaseConfig(invocations = 1, threads = 1, timeout = 5.seconds)
     override fun testCaseOrder() = TestCaseOrder.Random // make sure tests are not dependent on each other
 
     private val port = findFreePort()
