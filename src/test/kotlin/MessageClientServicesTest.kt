@@ -2,13 +2,16 @@ package test
 
 import ch.hsr.dsl.dwrtc.signaling.ClientService
 import ch.hsr.dsl.dwrtc.signaling.IExternalClient
-import io.kotlintest.*
+import io.kotlintest.Description
+import io.kotlintest.TestCaseOrder
+import io.kotlintest.TestResult
 import io.kotlintest.extensions.TestListener
 import io.kotlintest.matchers.boolean.shouldBeTrue
+import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 
 class MessageClientServicesTest : WordSpec(), TestListener {
-    override val defaultTestCaseConfig = TestCaseConfig(threads = 1, timeout = 5.seconds)
+    override fun isInstancePerTest(): Boolean = true
     override fun testCaseOrder() = TestCaseOrder.Random // make sure tests are not dependent on each other
 
     companion object {
