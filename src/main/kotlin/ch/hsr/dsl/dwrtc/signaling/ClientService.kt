@@ -212,7 +212,8 @@ class ClientService constructor(peerPort: Int? = findFreePort()) : IClientServic
                 future?.awaitListeners()
                 Thread.sleep(sleepTime)
             }
-        }
+        }.setUncaughtExceptionHandler { t, e -> logger.warn { "exception while bootstrapping $e in thread $t" } }
+
     }
 
     /** Setup the dispatcher to send the incoming messages to the correct user */
