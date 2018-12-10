@@ -10,7 +10,8 @@ const elements = getElementsArrayById([
   "peer-id-input",
   "copy-peer-id-input",
   "id-overlay",
-  "copy-peer-id-button"
+  "copy-peer-id-button",
+  "error-overlay"
 ])
 
 /**
@@ -79,17 +80,26 @@ async function startDwrtc(initiator, partnerId) {
     const error = message.error
     console.error(error)
     const errorSuffix =
-      "Kindly reload the page and try again with anpartner input"
+      "Kindly reload the page and try again with another partner input"
 
-    const p = document.createElement("p")
-    p.appendChild(document.createTextNode(`${error}. ${errorSuffix}.`))
-    elements["error-overlay"].appendChild(p)
-    elements["error-overlay"].style.display = "block"
+    showError(`${error}. ${errorSuffix}.`)
   })
 
   dwrtc.on("error", message => {
     console.error(message)
+    showError(message)
   })
 
   await dwrtc.setup()
+}
+
+const showError = message => {
+  removeAllChildren(elements["error-overlay"])
+  const p = document.createElement("p")
+  p.appendChild(document.createTextNode(`Error: ${message}`))
+  elements["error-overlay"].appendChild(p)
+  hide(elements["id-overlay"])
+  // TODO hide partner stream? or add background to error div so you can properly read it?
+  // Then again, an error may mean that you can still talk to each other, just not signal anymore
+  show(elements["error-overlay"])
 }
