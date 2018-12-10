@@ -81,7 +81,7 @@ Returns the client's ID as soon as the web socket connection is initiated.
 dwrtc.on("webSocketError", message => {})
 ```
 
-Returns the error message. Fires on error messages from the DWRTC backend, e.g. an unknown partner ID.
+Returns the error message. Fires on error messages from the DWRTC backend (received through the WebSocket), e.g. an unknown partner ID.
 
 ### error
 
